@@ -1,0 +1,35 @@
+{
+
+    "name": "Convey Plugin",
+    "description": "This extension is a university final year project designed to improve communication",
+    "version": "1.0",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_icon": "logo-icon.png",
+        "default_popup": "popup.html"
+        },
+
+    "permissions": [
+        "clipboardWrite",
+        "storage",
+        "https://meet.google.com/*",
+        "tabs"
+    ],
+
+    "content_scripts": [{
+        "matches": ["https://meet.google.com/*"],
+        "js": ["content.js"],
+        "css": ["content.css"],
+        "run_at": "document_start"
+      },
+      {
+        "matches": ["https://meet.google.com/*"],
+        "css": ["bootstrap.min.css"],
+        "run_at": "document_start"
+      }
+    ],
+      "web_accessible_resources": [
+        "resources/*.png"
+      ]
+    }
+    

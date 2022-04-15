@@ -1,0 +1,23 @@
+#popup {
+  width: 300px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+#index_link {
+  border-radius: 12px;
+  background-color: #235227;
+  border: none;
+  color: white;
+  padding: 10px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#index_link:hover {
+  background-color:grey;
+}
