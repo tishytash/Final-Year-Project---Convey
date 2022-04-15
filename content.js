@@ -24,6 +24,10 @@ function $el(tag,props) {
   }
   return el;
 }
+
+//global variables
+let currentlyTalking = [];
+
 // Default config
 // These values may be overridden by values retrieved from server
 let config = {
@@ -105,13 +109,13 @@ function createContainer() {
     </div>
 
     <div class="container-feedback">
-        <h2>Click to view feedback at the end of the call</h2>
+        <div><b>Click to view feedback at the end of the call</b></div>
         <button class="show-feedback">View Feedback</button>
         <button class="hide-feedback">Hide Feedback</button>
     
     <div class="feedback-container" title="viewing feedback">
       <div class="convay-body">
-        <p>Please be aware this is live during the call, so may not be final figures if the call continues.</p>
+        <div>Please be aware this is live during the call, so may not be final figures if the call continues.</div>
         <div class="convay-summary">Total Spoken Time: <span id="convay-summary-total"></span></div>
         <table class="convay-table"><tbody></tbody></table>
         ${createGroupTable()}
@@ -292,6 +296,7 @@ function init_participant(id) {
     "pct_display": null,
     "update_required": false,
     "groups": {},
+    "interruptions": 0,
     "visible": false
   };
   getParticipantName(record);
@@ -312,6 +317,13 @@ function getParticipantName(record) {
     }
   }
 }
+
+// Recognise two users are talking at once
+/* if talking true
+  another talking true
+  mark inturrupt */
+
+
 
 // ==================================================================
 // DOM UPDATES
@@ -428,10 +440,26 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
+        if (now - record.last >= 1000) {
+          currentlyTalking.push(id);
+        
+
+          if (currentlyTalking.length > 1) {
+            data[currentlyTalking[1]].interruptions++;
+            console.log('interruptions');
+            
+          }
+        }
         record.update_required = true;
 
+          
         // If it's been more than 1s since they have talked, they are done
         if (now - record.last >= 1000) {
+          currentlyTalking.pop( record );
+
+          console.log( 'interruption stopped' );
+
+        
           record.talking = false;
           record.last_start = 0;
           // Mark them as not talking

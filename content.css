@@ -169,8 +169,10 @@
 
 /* General */
 
+
 .container-feedback {
     background-color:#ffffff;
+    padding:20px;
 }
 
 .convay-top {
