@@ -164,12 +164,13 @@ function createContainer() {
 //==========
 
 // The container for the UI
-function createInterruptNotification() {
+/* function createInterruptNotification() {
   dom_container = $el('div',{id:"convay-interrupt-notification"});
   dom_container.innerHTML = `
+  <div id="interrupt-div" class="hide">you guys spoken</div>
   `;
   document.body.appendChild(dom_container);
-}
+} */
 
 //==========
 // Timer
@@ -441,13 +442,20 @@ setInterval(render,1000);
 
 //////INTERUUPTIOONNON MY OWN CODE YAY ( PLUS DANS HELP )
 function detectInterruption() {
-  let activeUsers = document.getElementsByClassName("talking")[0].rows;
-  console.log(JSON.stringify(activeUsers));
+  let activeUsers = document.getElementsByClassName("talking");
+  //console.log(JSON.stringify(activeUsers));
   if (activeUsers.length >= 2) {
+    console.log("hello");
     //pop up the notification
+/*      let notificationPop = getElementById("interrupt-div");
+    notificationPop.classList.remove("hide");
 
-    let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
-    console.log("There was an interruption with these users" + interruptingUsers);
+    setTimeout(function(){
+      notificationPop.classList.add("hide");
+    }, 10000); */
+ 
+    //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
+    //console.log("There was an interruption with these users" + interruptingUsers);
   }
 }
 
@@ -608,6 +616,7 @@ function attach() {
       }
       else {
         createContainer();
+        /* createInterruptNotification(); */
       }
       attached = true;
     }
