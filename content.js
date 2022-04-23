@@ -36,8 +36,9 @@ let config = {
 let options = {};
 let data = {};
 let participants_list = null;
-let currentlyTalking = [];
 let totaltalktime = 0;
+let currentlyTalking = [];
+
 let groups = {
   "a":{ "participants":{} },
   "b":{ "participants":{} },
@@ -158,6 +159,17 @@ function createContainer() {
   onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); });
 }
 
+//==========
+// Interruption Popup
+//==========
+
+// The container for the UI
+function createInterruptNotification() {
+  dom_container = $el('div',{id:"convay-interrupt-notification"});
+  dom_container.innerHTML = `
+  `;
+  document.body.appendChild(dom_container);
+}
 
 //==========
 // Timer
@@ -350,12 +362,12 @@ function updateParticipant(record) {
     record.time_display.textContent = getFormattedTotalTime(record);
   }
   record.pct_display.textContent = getFormattedTotalPercent(record);
-  let userRow = document.getElementById( record.id );
-  userRow.style.width = getFormattedTotalPercent( record );
+  //let userRow = document.getElementById( record.id );
+  //userRow.style.width = getFormattedTotalPercent( record );
   //hide row if there is no speech detected (for duplicated users)
-  if ( record.total === 0 ) {
-    userRow.classList.add( 'hidden' );
-  }
+  //if ( record.total === 0 ) {
+  //  userRow.classList.add( 'hidden' );
+  //}
   record.update_required = false;
 }
 function updateGroupTotals() {
@@ -419,12 +431,25 @@ function render(force) {
     // Update the groups
     updateGroupTotals();
 
+    chrome.storage.local.set( { "convay_data": data } );
     update_display_required = false;
   } catch(e) {
     console.log(e);
   }
 }
 setInterval(render,1000);
+
+//////INTERUUPTIOONNON MY OWN CODE YAY ( PLUS DANS HELP )
+function detectInterruption() {
+  let activeUsers = document.getElementsByClassName("talking")[0].rows;
+  console.log(JSON.stringify(activeUsers));
+  if (activeUsers.length >= 2) {
+    //pop up the notification
+
+    let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
+    console.log("There was an interruption with these users" + interruptingUsers);
+  }
+}
 
 // ==================================================================
 // SPEECH PROCESSING AND TIMING
@@ -445,13 +470,17 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
-        if (now - record.last >= 1000) {
+        detectInterruption();
+        if (now - record.last > 150) {
           currentlyTalking.push(id);
-        
-
+          
+          //console.log('currently talking array: ' + JSON.stringify(currentlyTalking));
           if (currentlyTalking.length > 1) {
             data[currentlyTalking[1]].interruptions++;
-            console.log('interruptions');
+            //console.log('INTERRRUPTION!');
+            //console.log(JSON.stringify(record));
+            //console.log('data currently talking: ' + JSON.stringify(data[currentlyTalking[ 1 ]]));
+            
             
           }
         }
@@ -459,11 +488,8 @@ function pulse() {
 
           
         // If it's been more than 1s since they have talked, they are done
-        if (now - record.last >= 1000) {
-          currentlyTalking.pop( record );
-
-          console.log( 'interruption stopped' );
-
+        if (now - record.last >= 2000) {
+          currentlyTalking.pop(record);
         
           record.talking = false;
           record.last_start = 0;
