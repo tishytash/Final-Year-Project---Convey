@@ -25,8 +25,6 @@ function $el(tag,props) {
   return el;
 }
 
-//global variables
-let currentlyTalking = [];
 
 // Default config
 // These values may be overridden by values retrieved from server
@@ -38,6 +36,7 @@ let config = {
 let options = {};
 let data = {};
 let participants_list = null;
+let currentlyTalking = [];
 let totaltalktime = 0;
 let groups = {
   "a":{ "participants":{} },
@@ -351,6 +350,12 @@ function updateParticipant(record) {
     record.time_display.textContent = getFormattedTotalTime(record);
   }
   record.pct_display.textContent = getFormattedTotalPercent(record);
+  let userRow = document.getElementById( record.id );
+  userRow.style.width = getFormattedTotalPercent( record );
+  //hide row if there is no speech detected (for duplicated users)
+  if ( record.total === 0 ) {
+    userRow.classList.add( 'hidden' );
+  }
   record.update_required = false;
 }
 function updateGroupTotals() {
