@@ -449,25 +449,29 @@ setInterval(render,1000);
 
 //////INTERUUPTIOONNON MY OWN CODE YAY ( PLUS DANS HELP )
 function detectInterruption() {
-  let activeUsers = document.getElementsByClassName("talking");
-  //console.log(JSON.stringify(activeUsers));
-  if (activeUsers.length >= 2) {
-    interruptionDetected = true;
-    countInterruptions++;
-    updateInterruptions();
-    console.log(countInterruptions);
-    //pop up the notification
-    let notificationPop = document.getElementById("notification-container");
-    notificationPop.classList.remove("hide");
 
-    setTimeout(function(){
-      notificationPop.classList.add("hide");
-      interruptionDetected = false;
-    }, 10000);
- 
-    //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
-    //console.log("There was an interruption with these users" + interruptingUsers);
-  }
+  /**first code example, basic interruption log without allocating who interrupted whom.**/
+
+  // let activeUsers = document.getElementsByClassName("talking");
+
+  // if (activeUsers.length >= 2) {
+  //   interruptionDetected = true;
+  countInterruptions++;
+
+  updateInterruptions();
+
+  //pop up the notification
+  let notificationPop = document.getElementById("notification-container");
+  notificationPop.classList.remove("hide");
+
+  setTimeout(function(){
+    notificationPop.classList.add("hide");
+    //interruptionDetected = false;
+  }, 10000);
+
+  //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
+  //console.log("There was an interruption with these users" + interruptingUsers);
+  
 }
 
 function updateInterruptions() {
@@ -493,23 +497,24 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
-         if (!interruptionDetected) {
-           detectInterruption();
-          
-         }
-        if (now - record.last > 150) {
+        if (now - record.last > 250) { //set at 250 as 1 second doesn't detect and any faster means an intake of breath could equal several interruptions
           if (!currentlyTalking.includes(id)){
             currentlyTalking.push(id);
           }
 
-          //if (currentlyTalking.length > 1 && !interruptionDetected) {
-          //  interruptionDetected = true;
-          //   data[currentlyTalking[1]].interruptions++;
+          if (currentlyTalking.length > 1 && !interruptionDetected) {
+            if (data[currentlyTalking[0]].talking == true) {
+        
+              interruptionDetected = true;
+              data[currentlyTalking[1]].interruptions++;
 
-          //   console.log(JSON.stringify(data[currentlyTalking[0]]) + 'was interrupted by');
+              console.log(JSON.stringify(data[currentlyTalking[0]]) + 'was interrupted by');
 
-          //   console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
-          // }
+              console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
+
+              detectInterruption();
+            }
+          }
         }
         record.update_required = true;
 
@@ -517,13 +522,14 @@ function pulse() {
         // If it's been more than 1s since they have talked, they are done
         if (now - record.last >= 1000) {
           currentlyTalking.pop(id);
-          if (currentlyTalking.length >= 1) {
-            //interruptionDetected = false;
-          }
+
           record.talking = false;
           record.last_start = 0;
           // Mark them as not talking
           notTalking(record);
+          if (currentlyTalking.length >= 1) {
+            interruptionDetected = false;
+          }
           continue;
         }
         let duration = (record.last - record.last_start);
