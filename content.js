@@ -14,7 +14,7 @@
 
 
 
-//creates an element
+//creates an element (why has he dollar signed this??)
 function $el(tag,props) {
   let p,el = document.createElement(tag);
   if (props) {
@@ -38,6 +38,7 @@ let data = {};
 let participants_list = null;
 let totaltalktime = 0;
 let currentlyTalking = [];
+let interruptionDetected = false;
 
 let groups = {
   "a":{ "participants":{} },
@@ -47,6 +48,7 @@ let groups = {
 };
 let update_display_required = false;
 
+let dom_container_notif = null;
 let dom_container = null;
 let dom_table = null;
 let dom_total = null;
@@ -164,13 +166,14 @@ function createContainer() {
 //==========
 
 // The container for the UI
-/* function createInterruptNotification() {
-  dom_container = $el('div',{id:"convay-interrupt-notification"});
-  dom_container.innerHTML = `
-  <div id="interrupt-div" class="hide">you guys spoken</div>
+ function createInterruptNotification() {
+  dom_container_notif = $el('div',{id:"notification-container"});
+  dom_container_notif.classList.add("hide");
+  dom_container_notif.innerHTML = `
+  <div id="interrupt-div">you guys spoken</div>
   `;
-  document.body.appendChild(dom_container);
-} */
+  document.body.appendChild(dom_container_notif);
+}
 
 //==========
 // Timer
@@ -445,14 +448,15 @@ function detectInterruption() {
   let activeUsers = document.getElementsByClassName("talking");
   //console.log(JSON.stringify(activeUsers));
   if (activeUsers.length >= 2) {
-    console.log("hello");
+    interruptionDetected = true;
     //pop up the notification
-/*      let notificationPop = getElementById("interrupt-div");
+    let notificationPop = document.getElementById("notification-container");
     notificationPop.classList.remove("hide");
 
     setTimeout(function(){
       notificationPop.classList.add("hide");
-    }, 10000); */
+      interruptionDetected = false;
+    }, 10000);
  
     //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
     //console.log("There was an interruption with these users" + interruptingUsers);
@@ -478,7 +482,9 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
-        detectInterruption();
+        if (!interruptionDetected) {
+          detectInterruption();
+        }
         if (now - record.last > 150) {
           currentlyTalking.push(id);
           
@@ -615,8 +621,8 @@ function attach() {
         dom_container.style.display="block";
       }
       else {
+        createInterruptNotification();
         createContainer();
-        /* createInterruptNotification(); */
       }
       attached = true;
     }

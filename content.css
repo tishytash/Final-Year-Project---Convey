@@ -258,7 +258,25 @@ td.convay-time, td.convay-pct {
     display:none;
 }
 
+/* Interruption Notification CSS */
+
 .hide {
-    display:none;
+    display:none !important;
 }
 
+#notification-container {
+    position:absolute;
+    left:5px;
+    min-width:300px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border:5px solid #ffffff;
+    margin: 1%;
+    z-index:99999;
+    max-height:600px;
+    overflow-y:auto;
+    font-size:100%;
+    font-family: 'Roboto', Tahoma, sans-serif;
+}
