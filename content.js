@@ -39,6 +39,7 @@ let participants_list = null;
 let totaltalktime = 0;
 let currentlyTalking = [];
 let interruptionDetected = false;
+let countInterruptions = 0;
 
 let groups = {
   "a":{ "participants":{} },
@@ -52,6 +53,7 @@ let dom_container_notif = null;
 let dom_container = null;
 let dom_table = null;
 let dom_total = null;
+let interrupt_total = null;
 
 
 
@@ -119,6 +121,7 @@ function createContainer() {
       <div class="convay-body">
         <div>Please be aware this is live during the call, so may not be final figures if the call continues.</div>
         <div class="convay-summary">Total Spoken Time: <span id="convay-summary-total"></span></div>
+        <div class="convay-interruption-summary">Total Interruptions: <span id="interrupt-summary"></div>
         <table class="convay-table"><tbody></tbody></table>
         ${createGroupTable()}
         
@@ -128,13 +131,13 @@ function createContainer() {
             <button id="topic-start">Start Topic</button>
             <div>Topic ends in<span id="countdown"></span></div>
           </div>
-        </div>
+        </div> -->
 
         <div class="reactions-div">
           <div class="show-reactions">Show Reactions</div>
           <div class="hide-reactions">Hide Reactions</div>
           <div class="reactions">${createReactions()}</div>
-        </div> -->
+        </div> 
 
       </div>
 
@@ -147,6 +150,7 @@ function createContainer() {
     <div class="convay-bottom"></div>
   `;
   document.body.appendChild(dom_container);
+  interrupt_total = dom_container.querySelector('#interrupt-summary')
   dom_table = dom_container.querySelector('table');
   dom_total = dom_container.querySelector('#convay-summary-total');
   let onclick=function(selector,f) {
@@ -170,7 +174,7 @@ function createContainer() {
   dom_container_notif = $el('div',{id:"notification-container"});
   dom_container_notif.classList.add("hide");
   dom_container_notif.innerHTML = `
-  <div id="interrupt-div">you guys spoken</div>
+  <div id="interrupt-div">you guys spoken, please shut up</div>
   `;
   document.body.appendChild(dom_container_notif);
 }
@@ -449,6 +453,9 @@ function detectInterruption() {
   //console.log(JSON.stringify(activeUsers));
   if (activeUsers.length >= 2) {
     interruptionDetected = true;
+    countInterruptions++;
+    updateInterruptions();
+    console.log(countInterruptions);
     //pop up the notification
     let notificationPop = document.getElementById("notification-container");
     notificationPop.classList.remove("hide");
@@ -461,6 +468,10 @@ function detectInterruption() {
     //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
     //console.log("There was an interruption with these users" + interruptingUsers);
   }
+}
+
+function updateInterruptions() {
+  interrupt_total.textContent = countInterruptions;
 }
 
 // ==================================================================
@@ -482,29 +493,33 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
-        if (!interruptionDetected) {
-          detectInterruption();
-        }
-        if (now - record.last > 150) {
-          currentlyTalking.push(id);
+         if (!interruptionDetected) {
+           detectInterruption();
           
-          //console.log('currently talking array: ' + JSON.stringify(currentlyTalking));
-          if (currentlyTalking.length > 1) {
-            data[currentlyTalking[1]].interruptions++;
-            //console.log('INTERRRUPTION!');
-            //console.log(JSON.stringify(record));
-            //console.log('data currently talking: ' + JSON.stringify(data[currentlyTalking[ 1 ]]));
-            
-            
+         }
+        if (now - record.last > 150) {
+          if (!currentlyTalking.includes(id)){
+            currentlyTalking.push(id);
           }
+
+          //if (currentlyTalking.length > 1 && !interruptionDetected) {
+          //  interruptionDetected = true;
+          //   data[currentlyTalking[1]].interruptions++;
+
+          //   console.log(JSON.stringify(data[currentlyTalking[0]]) + 'was interrupted by');
+
+          //   console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
+          // }
         }
         record.update_required = true;
 
           
         // If it's been more than 1s since they have talked, they are done
-        if (now - record.last >= 2000) {
-          currentlyTalking.pop(record);
-        
+        if (now - record.last >= 1000) {
+          currentlyTalking.pop(id);
+          if (currentlyTalking.length >= 1) {
+            //interruptionDetected = false;
+          }
           record.talking = false;
           record.last_start = 0;
           // Mark them as not talking
@@ -621,7 +636,6 @@ function attach() {
         dom_container.style.display="block";
       }
       else {
-        createInterruptNotification();
         createContainer();
       }
       attached = true;
@@ -670,4 +684,5 @@ chrome.storage.local.get(['options'],function(storage) {
 
 
   setInterval(attach,1000);
+  createInterruptNotification();
 });
