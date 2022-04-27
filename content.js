@@ -113,15 +113,15 @@ function createContainer() {
     </div>
 
     <div class="container-feedback">
-        <div><b>Click to view feedback at the end of the call</b></div>
-        <button class="show-feedback">View Feedback</button>
-        <button class="hide-feedback">Hide Feedback</button>
-    
+        <button class="show-feedback">View Live Feedback</button>
+        <button class="hide-feedback">Hide</button>
+
     <div class="feedback-container" title="viewing feedback">
       <div class="convay-body">
-        <div>Please be aware this is live during the call, so may not be final figures if the call continues.</div>
+        <div id="feedback-head">Live Feedback</div>
         <div class="convay-summary">Total Spoken Time: <span id="convay-summary-total"></span></div>
         <div class="convay-interruption-summary">Total Interruptions: <span id="interrupt-summary"></div>
+        <div class="table-head">Active Members</div>
         <table class="convay-table"><tbody></tbody></table>
         ${createGroupTable()}
         
@@ -133,15 +133,23 @@ function createContainer() {
           </div>
         </div> -->
 
-        <div class="reactions-div">
-          <div class="show-reactions">Show Reactions</div>
-          <div class="hide-reactions">Hide Reactions</div>
-          <div class="reactions">${createReactions()}</div>
-        </div> 
+        </div>
+        
+        </div>
 
-      </div>
+        
+        <!--<div class="personal-div">
+        <button class="show-personal">Show Personal Feedback</button>
+        <button class="hide-personal">Hide Personal Feedback</button>
+        <div class="personal">All of my feedback</div>
+      </div> -->
 
-    </div>
+
+      <!--<div class="reactions-div">
+        <div class="show-reactions">Show Reactions</div>
+        <div class="hide-reactions">Hide Reactions</div>
+        <div class="reactions">${createReactions()}</div>
+      </div> -->
 
     </div>
 
@@ -174,7 +182,7 @@ function createContainer() {
   dom_container_notif = $el('div',{id:"notification-container"});
   dom_container_notif.classList.add("hide");
   dom_container_notif.innerHTML = `
-  <div id="interrupt-div">you guys spoken, please shut up</div>
+  <div class="inner-interrupt" id="interrupt-div">Oops, there was an interruption!</div>
   `;
   document.body.appendChild(dom_container_notif);
 }
@@ -447,17 +455,13 @@ function render(force) {
 }
 setInterval(render,1000);
 
-//////INTERUUPTIOONNON MY OWN CODE YAY ( PLUS DANS HELP )
+//////Interriptuon Detection Function
 function detectInterruption() {
-
   /**first code example, basic interruption log without allocating who interrupted whom.**/
-
   // let activeUsers = document.getElementsByClassName("talking");
-
   // if (activeUsers.length >= 2) {
   //   interruptionDetected = true;
   countInterruptions++;
-
   updateInterruptions();
 
   //pop up the notification
@@ -497,7 +501,7 @@ function pulse() {
       if (!data.hasOwnProperty(id)) { continue; }
       record = data[id];
       if (record.talking) {
-        if (now - record.last > 250) { //set at 250 as 1 second doesn't detect and any faster means an intake of breath could equal several interruptions
+        if (now - record.last > 250) { //set at 250 as 1 second doesn't detect and any faster means an intake of breath could equal several interruptions & pulse is not recording milliseconds correctly, so it rarely goes over 1000.
           if (!currentlyTalking.includes(id)){
             currentlyTalking.push(id);
           }

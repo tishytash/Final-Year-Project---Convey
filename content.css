@@ -57,7 +57,8 @@
     max-height:600px;
     overflow-y:auto;
     font-size:100%;
-    font-family: 'Roboto', Tahoma, sans-serif;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 #convay-container.collapsed {
     opacity: .5;
@@ -74,25 +75,69 @@
 
 /* Hide/Show Feedback */
 #convay-container .hide-feedback, #convay-container .show-feedback .convay-container-drag{
-    display:inline-block;
+    display:flex;
     cursor:pointer;
-    border:1px solid #1A73E8;
-    border-radius: 10px;
-    background-color: #1A73E8;
+    border:1px solid #2684fc;
+    border-radius: 100px;
+    background-color: #2684fc;
     color: white;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-left: 3%;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
 }
+
+.show-feedback{
+    cursor:pointer;
+    border:1px solid #2684fc;
+    border-radius: 100px;
+    background-color: #2684fc;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
+}
+
+.show-feedback:hover {
+    cursor:pointer;
+    border:1px solid #0066da;
+    border-radius: 100px;
+    background-color: #0066da;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
+}
+
 #convay-container .hide-feedback {
     display:none;
 }
 #convay-container.show_feedback .hide-feedback {
-    display:inline-block;
+    display: block; 
+    margin: 0 auto;
 }
 
+.hide-feedback:hover {
+    cursor:pointer;
+    border:1px solid #0066da;
+    border-radius: 100px;
+    background-color: #0066da;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
+}
 /*Hides feedback button when clicked, just shows hide feedback button*/
 #convay-container.show_feedback .show-feedback {
     display:none;
@@ -104,7 +149,7 @@
     display:block;
 }
 
-/* Hide/Show Groups */
+/* Hide/Show Groups*/ 
 #convay-container .convay-hide-groups, #convay-container .convay-show-groups .convay-container-drag{
     display:inline-block;
     cursor:pointer;
@@ -112,10 +157,10 @@
     border-radius: 10px;
     background-color: #1A73E8;
     color: white;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     margin-left: 3%;
 }
 #convay-container .convay-hide-groups {
@@ -137,17 +182,31 @@
 /* Show/Hide reactions */
 #convay-container .hide-reactions, #convay-container .show-reactions .convay-container-drag{
     display:inline-block;
+    display:inline-block;
     cursor:pointer;
-    border:1px solid #1A73E8;
-    border-radius: 10px;
-    background-color: #1A73E8;
+    border:1px solid #2684fc;
+    border-radius: 100px;
+    background-color: #2684fc;
     color: white;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-left: 3%;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
+
+.show-reactions{
+    display:inline-block;
+    cursor:pointer;
+    border:1px solid #2684fc;
+    border-radius: 100px;
+    background-color: #2684fc;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
 #convay-container .hide-reactions {
     display:none;
 }
@@ -169,44 +228,87 @@
 
 /* General */
 
+#feedback-head {
+    font-size: 2em;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 1em;
+}
 
 .container-feedback {
     background-color:#ffffff;
-    padding:20px;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    display: block; 
+    margin: 0 auto;
 }
 
 .convay-top {
     background-color:#ffffff;
-    padding-left:8%;
     padding-top:5%;
     cursor:pointer;
 }
 .convay-title {
-    color:#235227;
-    font-size:200%;
+    color:#00832d;
+    font-size:4em;
     font-weight:bold;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
 }
 .convay-header {
     background-color: #ffffff;
     padding:5%;
 }
 .convay-summary {
-    color:#235227;
+    color:#000000;
     text-transform:uppercase;
-    padding: 10px;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-weight:500;
+    border: 1px solid #00ac47;
+    border-radius: 2em;
+    background-color:#00ac47;
+    margin-bottom: 1em;
+    text-align: center;
 }
 .convay-body {
     background-color:#ffffff;
-    padding:20px;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
 }
+
+.convay-interruption-summary {
+    border:0.3em solid #ffa200;
+    background-color:#ffa200;
+    border-radius: 2em;
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    text-align: center;
+}
+
 .convay-table {
-    border:none;
+    border:none;  
 }
+
+.table-head {
+    font-size: 1.4em;
+    margin-top: 1em;
+    font-weight: bold;
+}
+
 .convay-table td {
-    padding:10px;
+    padding:0.2em;
     border:none;
     white-space:nowrap;
+    font-size: 1.2em;
 }
 td.convay-time, td.convay-pct {
     padding:0 2px;
@@ -215,16 +317,21 @@ td.convay-time, td.convay-pct {
 .convay-table td.convay-time {
     border:1px solid #ffffff;
     background-color: #ffffff;
-    border-radius:4px;
-    cursor:pointer;
+    border-radius:1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 1em;
 }
 .convay-table td.convay-pct {
     border-radius: 1px;
 }
 
 .convay-table tr.talking td.convay-time {
-    border:1px solid #1A73E8;
-    background-color: #1A73E8;
+    background-color: #2684fc;
+    border-radius:1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 1em;
 }
 
 .convay-group-selector,.convay-group-label {
@@ -267,16 +374,21 @@ td.convay-time, td.convay-pct {
 #notification-container {
     position:absolute;
     left:5px;
-    min-width:300px;
+    min-width:200px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    border:5px solid #ffffff;
-    margin: 1%;
+    border:10px solid #ffa200;
+    background-color:#ffa200;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin: 2%;
     z-index:99999;
     max-height:600px;
     overflow-y:auto;
     font-size:100%;
     font-family: 'Roboto', Tahoma, sans-serif;
+    font-weight: bold;
 }
+
