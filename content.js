@@ -188,6 +188,20 @@ function createContainer() {
 }
 
 //==========
+// Sililoquy Popup
+//==========
+
+// The container for the UI
+function createSiliNotification() {
+  dom_container_notif = $el('div',{id:"sili-container"});
+  dom_container_notif.classList.add("hide");
+  dom_container_notif.innerHTML = `
+  <div class="inner-interrupt" id="interrupt-div">Nice Sililoquy, you've been speaking for 2 minutes solid!</div>
+  `;
+  document.body.appendChild(dom_container_notif);
+}
+
+//==========
 // Timer
 //==========
 
@@ -482,6 +496,17 @@ function updateInterruptions() {
   interrupt_total.textContent = countInterruptions;
 }
 
+/////Sililoquy Function -- Notifies user if they have been speaking too long
+function detectSililoquy() {
+  let siliPop = document.getElementById("sili-container");
+  siliPop.classList.remove("hide");
+
+  setTimeout(function(){
+    siliPop.classList.add("hide");
+  }, 5000);
+}
+
+
 // ==================================================================
 // SPEECH PROCESSING AND TIMING
 // ==================================================================
@@ -520,7 +545,10 @@ function pulse() {
             }
           }
         }
+        //console.log(JSON.stringify(record.talking));
+        
         record.update_required = true;
+        
 
           
         // If it's been more than 1s since they have talked, they are done
@@ -537,6 +565,16 @@ function pulse() {
           continue;
         }
         let duration = (record.last - record.last_start);
+        
+        //
+        //
+        //
+        // CURRENTLY WORKING ON THIS CODE TO MAKE A NOTIFICATIONI F YOU TALKING TOO MUCH (just need to get pop up showing)
+        if (duration > 120000) {
+          detectSililoquy()
+          //console.log("hey you've been speaking for more than 10 seconds.")
+        }
+        //console.log(JSON.stringify(duration));
 
         // If the person has been talking but not yet for at least one pulse_timeslice, don't do anything yet
         if (duration < config.pulse_timeslice) {
@@ -695,4 +733,5 @@ chrome.storage.local.get(['options'],function(storage) {
 
   setInterval(attach,1000);
   createInterruptNotification();
+  createSiliNotification();
 });
