@@ -54,6 +54,7 @@ let dom_container = null;
 let dom_table = null;
 let dom_total = null;
 let interrupt_total = null;
+let sililoquyDetected = false;
 
 
 
@@ -196,7 +197,7 @@ function createSiliNotification() {
   dom_container_notif = $el('div',{id:"sili-container"});
   dom_container_notif.classList.add("hide");
   dom_container_notif.innerHTML = `
-  <div class="inner-interrupt" id="interrupt-div">Nice Sililoquy, you've been speaking for 2 minutes solid!</div>
+  <div class="inner-sili" id="sili-div">Nice Sililoquy, did you know you've been speaking for 2 minutes solid?</div>
   `;
   document.body.appendChild(dom_container_notif);
 }
@@ -503,7 +504,8 @@ function detectSililoquy() {
 
   setTimeout(function(){
     siliPop.classList.add("hide");
-  }, 5000);
+    sililoquyDetected=false;
+  }, 10000);
 }
 
 
@@ -541,6 +543,9 @@ function pulse() {
 
               console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
 
+              //let interupter = data[currentlyTalking[1]];
+              //let interuptee = data[currentlyTalking[0]];
+
               detectInterruption();
             }
           }
@@ -566,15 +571,15 @@ function pulse() {
         }
         let duration = (record.last - record.last_start);
         
-        //
-        //
-        //
-        // CURRENTLY WORKING ON THIS CODE TO MAKE A NOTIFICATIONI F YOU TALKING TOO MUCH (just need to get pop up showing)
-        if (duration > 120000) {
-          detectSililoquy()
-          //console.log("hey you've been speaking for more than 10 seconds.")
+        // Notifies if you have been speaking for more than 2 minutes
+        if (!sililoquyDetected) {
+          if (duration > 120000) {
+            sililoquyDetected=true;
+            detectSililoquy()
+            //console.log("hey you've been speaking for more than 10 seconds.")
+          }
         }
-        //console.log(JSON.stringify(duration));
+        
 
         // If the person has been talking but not yet for at least one pulse_timeslice, don't do anything yet
         if (duration < config.pulse_timeslice) {
