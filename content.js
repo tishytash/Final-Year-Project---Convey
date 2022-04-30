@@ -620,7 +620,7 @@ function pulse() {
         
         // Notifies if you have been speaking for more than 2 minutes
         if (!soliloquyDetected) {
-          if (duration > 5000) {
+          if (duration > 180000) {
             soliloquyDetected=true;
             detectSoliloquy(record.id);
             data[id].soliloquys++;
