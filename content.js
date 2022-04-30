@@ -344,7 +344,7 @@ function updatePersonalFeedback() {
     soliloquyPersonal.textContent = feedbackData.soliloquys;
     minutesPersonal.textContent = feedbackData.time_display.textContent;
     percentPersonal.textContent = feedbackData.pct_display.textContent;
-    scorePersonal.textContent = feedbackData.score;
+    scorePersonal.textContent = calculateScore(feedbackData);
 
     //console.log(JSON.stringify(feedbackData.name));
   }
@@ -356,6 +356,24 @@ function getPersonalRecord() {
       return data[id];
     }
   }
+}
+
+function calculateScore(personalData) {
+  let totalParticipants = participants_list.childElementCount;
+  let idealTalkPercent = 100 / totalParticipants;
+  let idealPercentDifference = Math.abs(idealTalkPercent - parseInt(personalData.pct_display.textContent));
+  score = idealTalkPercent - idealPercentDifference - ((personalData.interruptions + personalData.soliloquys)*25);
+  let maxScore = idealTalkPercent;
+  let totals = Math.round((score / maxScore) * 100);
+
+  return totals;
+
+/*   0 interruption = 5
+  0 soliloquy = 5
+  ideal percent is: users/100(20)
+  distance from ideal = 20-0
+  minus difference from score
+  distance - (total interruptions + total soliloquy) = score */
 }
 
 
