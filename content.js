@@ -55,6 +55,8 @@ let dom_table = null;
 let dom_total = null;
 let interrupt_total = null;
 let sililoquyDetected = false;
+let clientID = null;
+let assignedClientID = false;
 
 
 
@@ -173,6 +175,8 @@ function createContainer() {
   onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
   onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); });
 }
+
+
 
 //==========
 // Interruption Popup
@@ -471,23 +475,29 @@ function render(force) {
 setInterval(render,1000);
 
 //////Interriptuon Detection Function
-function detectInterruption() {
+function displayInterruption(interrupter, interruptee) {
   /**first code example, basic interruption log without allocating who interrupted whom.**/
   // let activeUsers = document.getElementsByClassName("talking");
   // if (activeUsers.length >= 2) {
   //   interruptionDetected = true;
+  
   countInterruptions++;
   updateInterruptions();
+  console.log('this is the interrupter' + interrupter);
+  console.log('clientid' + clientID);
+  console.log('this was interrupted' + interruptee);
 
   //pop up the notification
-  let notificationPop = document.getElementById("notification-container");
-  notificationPop.classList.remove("hide");
+  if (interrupter == clientID || interruptee == clientID) {
+    
+    let notificationPop = document.getElementById("notification-container");
+    notificationPop.classList.remove("hide");
 
-  setTimeout(function(){
-    notificationPop.classList.add("hide");
-    //interruptionDetected = false;
-  }, 10000);
-
+    setTimeout(function(){
+      notificationPop.classList.add("hide");
+      //interruptionDetected = false;
+    }, 10000);
+  }
   //let interruptingUsers = activeUsers.getElementsByClassName("convay-name");
   //console.log("There was an interruption with these users" + interruptingUsers);
   
@@ -498,14 +508,20 @@ function updateInterruptions() {
 }
 
 /////Sililoquy Function -- Notifies user if they have been speaking too long
-function detectSililoquy() {
-  let siliPop = document.getElementById("sili-container");
-  siliPop.classList.remove("hide");
+function detectSililoquy(speakerID) {
+  //console.log('speaker id = ' + speakerID);
+  //console.log('client id = ' + clientID);
+  if (clientID == speakerID) {
+    let siliPop = document.getElementById("sili-container");
+    siliPop.classList.remove("hide");
 
-  setTimeout(function(){
-    siliPop.classList.add("hide");
-    sililoquyDetected=false;
-  }, 10000);
+    setTimeout(function(){
+      sililoquyDetected=false;
+      siliPop.classList.add("hide");
+    }, 10000);
+  } else {
+    sililoquyDetected = false;
+  }
 }
 
 
@@ -535,7 +551,7 @@ function pulse() {
 
           if (currentlyTalking.length > 1 && !interruptionDetected) {
             if (data[currentlyTalking[0]].talking == true) {
-        
+              
               interruptionDetected = true;
               data[currentlyTalking[1]].interruptions++;
 
@@ -543,14 +559,10 @@ function pulse() {
 
               console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
 
-              //let interupter = data[currentlyTalking[1]];
-              //let interuptee = data[currentlyTalking[0]];
-
-              detectInterruption();
+              displayInterruption(currentlyTalking[0], currentlyTalking[1]);
             }
           }
         }
-        //console.log(JSON.stringify(record.talking));
         
         record.update_required = true;
         
@@ -573,9 +585,9 @@ function pulse() {
         
         // Notifies if you have been speaking for more than 2 minutes
         if (!sililoquyDetected) {
-          if (duration > 120000) {
+          if (duration > 10000) {
             sililoquyDetected=true;
-            detectSililoquy()
+            detectSililoquy(record.id);
             //console.log("hey you've been speaking for more than 10 seconds.")
           }
         }
@@ -611,7 +623,7 @@ let observer = new MutationObserver(function(mutations) {
   try {
     // console.log("MUTATION OBSERVER");
     // console.log(mutations);
-
+    
     mutations.forEach(function(mutation) {
       let el = mutation.target;
 
@@ -634,6 +646,11 @@ let observer = new MutationObserver(function(mutations) {
         let listitem = parent(el, 'div[role="listitem"]');
         if (listitem) {
           id = listitem.getAttribute('data-participant-id');
+          if (!assignedClientID) {
+            assignedClientID = true;
+            clientID = id;
+            //console.log(clientID);
+          }
           el.setAttribute('talk-id', id);
         }
       }
@@ -696,6 +713,13 @@ function attach() {
   }
 }
 
+function assignClientID() {
+  //console.log("hello");
+  //let parti = document.getAttribute('data-participant-id');
+  //console.log(JSON.stringify(parti));
+}
+
+
 // ==================================================================
 // WELCOME MESSAGE
 // ==================================================================
@@ -739,4 +763,5 @@ chrome.storage.local.get(['options'],function(storage) {
   setInterval(attach,1000);
   createInterruptNotification();
   createSiliNotification();
+  //assignClientID();
 });
