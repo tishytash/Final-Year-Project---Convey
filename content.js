@@ -53,12 +53,17 @@ let dom_container_notif = null;
 let dom_container = null;
 let dom_table = null;
 let dom_total = null;
-let interrupt_total = null;
-let sililoquyDetected = false;
+let interruptTotal = null;
+let soliloquyDetected = false;
 let clientID = null;
 let assignedClientID = false;
 
-
+//personal feedback elements
+let interruptPersonal = null;
+let soliloquyPersonal = null;
+let minutesPersonal = null;
+let percentPersonal = null;
+let scorePersonal = null;
 
 // ==================================================================
 // UTIL
@@ -127,32 +132,22 @@ function createContainer() {
         <div class="table-head">Active Members</div>
         <table class="convay-table"><tbody></tbody></table>
         ${createGroupTable()}
-        
-        <!--<div class="topic-timer">
-          <div class="topics-header">Topics Timer</div>
-          <div class="topics-body">
-            <button id="topic-start">Start Topic</button>
-            <div>Topic ends in<span id="countdown"></span></div>
-          </div>
-        </div> -->
-
-        </div>
-        
-        </div>
+      </div>   
+    </div>
 
         
-        <!--<div class="personal-div">
-        <button class="show-personal">Show Personal Feedback</button>
-        <button class="hide-personal">Hide Personal Feedback</button>
-        <div class="personal">All of my feedback</div>
-      </div> -->
+    <div class="personal-div">
+      <button class="show-personal">End of Call?</button>
+      <button class="hide-personal">Return</button>
+      <div class="personal">${createPersonalFeedback()}</div>
+    </div>
 
 
-      <!--<div class="reactions-div">
-        <div class="show-reactions">Show Reactions</div>
-        <div class="hide-reactions">Hide Reactions</div>
-        <div class="reactions">${createReactions()}</div>
-      </div> -->
+    <!--<div class="reactions-div">
+      <div class="show-reactions">Show Reactions</div>
+      <div class="hide-reactions">Hide Reactions</div>
+      <div class="reactions">${createReactions()}</div>
+    </div> -->
 
     </div>
 
@@ -161,7 +156,13 @@ function createContainer() {
     <div class="convay-bottom"></div>
   `;
   document.body.appendChild(dom_container);
-  interrupt_total = dom_container.querySelector('#interrupt-summary')
+  interruptTotal = dom_container.querySelector('#interrupt-summary');
+  interruptPersonal = dom_container.querySelector('#p-interruptions');
+  soliloquyPersonal = dom_container.querySelector('#p-soliloquy');
+  minutesPersonal = dom_container.querySelector('#p-minutes');
+  percentPersonal = dom_container.querySelector('#p-percent');
+  scorePersonal = dom_container.querySelector('#p-score');
+ 
   dom_table = dom_container.querySelector('table');
   dom_total = dom_container.querySelector('#convay-summary-total');
   let onclick=function(selector,f) {
@@ -172,10 +173,14 @@ function createContainer() {
   onclick('.show-feedback', ()=>{ dom_container.classList.add("show_feedback"); });
   onclick('.hide-feedback', ()=>{ dom_container.classList.remove("show_feedback"); });
 
+  onclick('.show-personal', ()=>{ dom_container.classList.add("show_personal"); });
+  onclick('.show-personal', ()=>{ updatePersonalFeedback() });
+  //onclick('.show-personal', ()=>{ getPersonalRecord() });
+  onclick('.hide-personal', ()=>{ dom_container.classList.remove("show_personal"); });
+
   onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
   onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); });
 }
-
 
 
 //==========
@@ -193,15 +198,15 @@ function createContainer() {
 }
 
 //==========
-// Sililoquy Popup
+// Soliloquy Popup
 //==========
 
 // The container for the UI
-function createSiliNotification() {
-  dom_container_notif = $el('div',{id:"sili-container"});
+function createSoliNotification() {
+  dom_container_notif = $el('div',{id:"soli-container"});
   dom_container_notif.classList.add("hide");
   dom_container_notif.innerHTML = `
-  <div class="inner-sili" id="sili-div">Nice Sililoquy, did you know you've been speaking for 2 minutes solid?</div>
+  <div class="inner-soli" id="soli-div">Nice Soliloquy, did you know you've been speaking for 3 minutes solid?</div>
   `;
   document.body.appendChild(dom_container_notif);
 }
@@ -316,11 +321,41 @@ function createReactions() {
 }
 
 
-// create feedback container function
-function createFeedback() {
+//==========
+//Personalised Feedback Container
+//==========
+function createPersonalFeedback() {
   return `
-  meth
-  `
+    <div class="personal-container" title="Personalised Feedback">
+      <div class="p-interruptions">You interrupted <span id="p-interruptions"></span> times.</div>
+      <div class="p-soliloquys">You had <span id="p-soliloquy"></span> soliloquys.</div>
+      <div class="p-minutes">You spoke for <span id="p-minutes"></span> minutes.</div>
+      <div class="p-percent">Your communication percent is <span id="p-percent"></span>.</div>
+      <div class="p-score">Your participation score: <span id="p-score"></span></div>
+    </div>
+  `;
+}
+
+function updatePersonalFeedback() {
+  let feedbackData = getPersonalRecord();
+  if (feedbackData != null) {
+    //let personalName = feedbackData.name;
+    interruptPersonal.textContent = feedbackData.interruptions;
+    soliloquyPersonal.textContent = feedbackData.soliloquys;
+    minutesPersonal.textContent = feedbackData.time_display.textContent;
+    percentPersonal.textContent = feedbackData.pct_display.textContent;
+    scorePersonal.textContent = feedbackData.score;
+
+    //console.log(JSON.stringify(feedbackData.name));
+  }
+}
+
+function getPersonalRecord() {
+  for (id in data) {
+    if (id == clientID) {
+      return data[id];
+    }
+  }
 }
 
 
@@ -343,6 +378,7 @@ function init_participant(id) {
     "update_required": false,
     "groups": {},
     "interruptions": 0,
+    "soliloquys": 0,
     "visible": false
   };
   getParticipantName(record);
@@ -364,7 +400,7 @@ function getParticipantName(record) {
   }
 }
 
-// Recognise two users are talking at once
+// Recognise two users are talking at once (intially code creaton)
 /* if talking true
   another talking true
   mark inturrupt */
@@ -483,9 +519,9 @@ function displayInterruption(interrupter, interruptee) {
   
   countInterruptions++;
   updateInterruptions();
-  console.log('this is the interrupter' + interrupter);
-  console.log('clientid' + clientID);
-  console.log('this was interrupted' + interruptee);
+  //console.log('this is the interrupter' + interrupter);
+  //console.log('clientid' + clientID);
+  //console.log('this was interrupted' + interruptee);
 
   //pop up the notification
   if (interrupter == clientID || interruptee == clientID) {
@@ -504,23 +540,23 @@ function displayInterruption(interrupter, interruptee) {
 }
 
 function updateInterruptions() {
-  interrupt_total.textContent = countInterruptions;
+  interruptTotal.textContent = countInterruptions;
 }
 
-/////Sililoquy Function -- Notifies user if they have been speaking too long
-function detectSililoquy(speakerID) {
+/////Soliloquy Function -- Notifies user if they have been speaking too long
+function detectSoliloquy(speakerID) {
   //console.log('speaker id = ' + speakerID);
   //console.log('client id = ' + clientID);
   if (clientID == speakerID) {
-    let siliPop = document.getElementById("sili-container");
-    siliPop.classList.remove("hide");
+    let soliPop = document.getElementById("soli-container");
+    soliPop.classList.remove("hide");
 
     setTimeout(function(){
-      sililoquyDetected=false;
-      siliPop.classList.add("hide");
+      soliloquyDetected=false;
+      soliPop.classList.add("hide");
     }, 10000);
   } else {
-    sililoquyDetected = false;
+    soliloquyDetected = false;
   }
 }
 
@@ -555,9 +591,8 @@ function pulse() {
               interruptionDetected = true;
               data[currentlyTalking[1]].interruptions++;
 
-              console.log(JSON.stringify(data[currentlyTalking[0]]) + 'was interrupted by');
-
-              console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
+              //console.log(JSON.stringify(data[currentlyTalking[0]]) + 'was interrupted by');
+              //console.log('this person' + JSON.stringify(data[currentlyTalking[1]]));
 
               displayInterruption(currentlyTalking[0], currentlyTalking[1]);
             }
@@ -584,10 +619,11 @@ function pulse() {
         let duration = (record.last - record.last_start);
         
         // Notifies if you have been speaking for more than 2 minutes
-        if (!sililoquyDetected) {
-          if (duration > 10000) {
-            sililoquyDetected=true;
-            detectSililoquy(record.id);
+        if (!soliloquyDetected) {
+          if (duration > 5000) {
+            soliloquyDetected=true;
+            detectSoliloquy(record.id);
+            data[id].soliloquys++;
             //console.log("hey you've been speaking for more than 10 seconds.")
           }
         }
@@ -713,12 +749,6 @@ function attach() {
   }
 }
 
-function assignClientID() {
-  //console.log("hello");
-  //let parti = document.getAttribute('data-participant-id');
-  //console.log(JSON.stringify(parti));
-}
-
 
 // ==================================================================
 // WELCOME MESSAGE
@@ -762,6 +792,5 @@ chrome.storage.local.get(['options'],function(storage) {
 
   setInterval(attach,1000);
   createInterruptNotification();
-  createSiliNotification();
-  //assignClientID();
+  createSoliNotification();
 });
