@@ -136,10 +136,10 @@ function createContainer() {
     </div>
 
         
-    <div class="personal-div">
-      <button class="show-personal">End of Call?</button>
+    <div class="personalfeed-container">
+      <button class="show-personal">Call Ending?</button>
       <button class="hide-personal">Return</button>
-      <div class="personal">${createPersonalFeedback()}</div>
+      <div class="personal-feed">${createPersonalFeedback()}</div>
     </div>
 
 
@@ -175,7 +175,6 @@ function createContainer() {
 
   onclick('.show-personal', ()=>{ dom_container.classList.add("show_personal"); });
   onclick('.show-personal', ()=>{ updatePersonalFeedback() });
-  //onclick('.show-personal', ()=>{ getPersonalRecord() });
   onclick('.hide-personal', ()=>{ dom_container.classList.remove("show_personal"); });
 
   onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
@@ -212,7 +211,7 @@ function createSoliNotification() {
 }
 
 //==========
-// Timer
+// Timer    ----NOT IN USE----
 //==========
 
 var el = document.getElementById('topic-start');
@@ -253,7 +252,7 @@ function createGroupTable() {
   return table;
 }
 
-// check if participant already exists (so we can check for presenting duplicates)
+// check if participant already exists (so we can check for presenting duplicates and hide them)
 function checkForDuplicates ( participant ) {
   let duplicatesFound = 0;
   for ( id in data ) {
@@ -295,7 +294,7 @@ function createParticipantRow(record) {
 }
 
 
-// Create the group selectors that go into each participant's row
+// Create the group selectors that go into each participant's row ----NOT IN USE----
 function createParticipantRowGroups() {
   return `
     <div class="convay-group-selector-container" title="Click groups to add this participant's time to a group bucket">
@@ -307,7 +306,7 @@ function createParticipantRowGroups() {
     `;
 }
 
-// Create the reaction selectors
+// Create the reaction selectors ----NOT IN USE----
 function createReactions() {
   return `
   <div class="reactions-list-container" title="Click reaction to react">
@@ -327,11 +326,13 @@ function createReactions() {
 function createPersonalFeedback() {
   return `
     <div class="personal-container" title="Personalised Feedback">
-      <div class="p-interruptions">You interrupted <span id="p-interruptions"></span> times.</div>
-      <div class="p-soliloquys">You had <span id="p-soliloquy"></span> soliloquys.</div>
-      <div class="p-minutes">You spoke for <span id="p-minutes"></span> minutes.</div>
-      <div class="p-percent">Your communication percent is <span id="p-percent"></span>.</div>
-      <div class="p-score">Your participation score: <span id="p-score"></span></div>
+      <div class="p-welcome">Thank you for your participation in this call, please see your personalised feedback below!</div>
+      <div class="p-interruptions">You interrupted <b><span id="p-interruptions"></span></b> times.</div>
+      <div class="p-soliloquys">You had <b><span id="p-soliloquy"></span></b> soliloquys.</div>
+      <div class="p-minutes">You spoke for <b><span id="p-minutes"></span></b> minutes.</div>
+      <div class="p-percent">Your communication percent is <b><span id="p-percent"></span></b>.</div>
+      <div class="p-score">Participation Score: <br /><b><span id="p-score"></span></b></div>
+      <div class="p-score-feedback">Your score may be affected by non-participating or over-participating call members, please take this time to reflect and leave the call when ready.</div>
     </div>
   `;
 }
@@ -777,7 +778,7 @@ function welcome() {
     <div class="title">Welcome to Convay!</div>
     <div>To enable the display, turn on the Participants list while in a Meeting.</div>
     <div>Don't forget to say something when you join the meeting to be added to the feedback.
-
+        <p>Prior to ending the call, click the Call Ending? Button to view your personalised feedback.</p>
       <button id="welcome-okay">Okay</button>
     </div>
   `;
