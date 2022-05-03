@@ -75,6 +75,73 @@
     padding:0 10px;
 }
 
+/*Help Section*/
+#convay-container .hide-help, #convay-container .show-help .convay-container-drag{
+    display:flex;
+    cursor:pointer;
+    display: block; 
+    text-align: right;
+    padding-right: 1.5em;
+    background-color: white;
+}
+
+.show-help{
+    cursor:pointer;
+    display: block; 
+    text-align: right;
+    padding-right: 1.5em;
+    background-color: white;
+}
+
+.show-help:hover {
+    cursor:pointer;
+    display: block; 
+    margin: 0 auto;
+    color:#0066da;
+    background-color: white;
+}
+
+#convay-container .hide-help {
+    display:none;
+}
+#convay-container.show_help .hide-help {
+    display: block; 
+    margin: 0 auto;
+}
+
+.hide-help:hover {
+    cursor:pointer;
+    display: block; 
+    margin: 0 auto;
+    color:#0066da;
+}
+/*Hides feedback button when clicked, just shows hide feedback button*/
+#convay-container.show_help .show-help {
+    display:none;
+}
+.help-content {
+    display:none;
+}
+#convay-container.show_help .help-content {
+    display:block;
+    background-color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 2em;
+    text-align: center;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#ans {
+    font-size: 0.9em;
+}
+
+#faq {
+    font-size: 1em;
+    padding-top: 0.1em;
+}
+
+
 /* Hide/Show Feedback */
 #convay-container .hide-feedback, #convay-container .show-feedback .convay-container-drag{
     display:flex;
@@ -251,6 +318,8 @@
     margin: 0 auto;
     
 }
+
+/*Personal Feedback CSS*/
 
 .personal-feed {
     display: inline-block;
