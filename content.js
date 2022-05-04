@@ -149,6 +149,9 @@ function createContainer() {
           <div id="faq"><b>What is the ideal talk percent?</b></div>
           <div id="ans">Ideal talk percent is what each users talking percentage should be based on the number of participants, if everyone spoke equally.</div>
 
+          <div id="faq"><b>How do I keep track across calls?</b></div>
+          <div id="ans">Click the download feedback button at the end of End Call to save your results as a text file for future referencing.</div>
+
         </div>
     </div>
     </div>
@@ -172,7 +175,9 @@ function createContainer() {
     <div class="personalfeed-container">
       <button class="show-personal">Call Ending?</button>
       <button class="hide-personal">Return</button>
-      <div class="personal-feed">${createPersonalFeedback()}</div>
+      <div class="personal-feed">${createPersonalFeedback()}
+      <button class="download-button" value="Download">Download Feedback</button>
+      </div>
     </div>
 
 
@@ -212,9 +217,13 @@ function createContainer() {
   onclick('.show-personal', ()=>{ dom_container.classList.add("show_personal"); });
   onclick('.show-personal', ()=>{ updatePersonalFeedback() });
   onclick('.hide-personal', ()=>{ dom_container.classList.remove("show_personal"); });
+  onclick('.download-button',()=>{  downloadFeedback() }, false);
 
   onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
   onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); });
+
+  
+  
 }
 
 
@@ -369,6 +378,7 @@ function createPersonalFeedback() {
       <div class="p-percent">Your communication percent is <b><span id="p-percent"></span></b>.</div>
       <div class="p-score">Participation Score: <br /><b><span id="p-score"></span></b></div>
       <div class="p-score-feedback">Your score may be affected by non-participating or over-participating call members, please take this time to reflect and leave the call when ready.</div>
+      
     </div>
   `;
 }
@@ -404,14 +414,32 @@ function calculateScore(personalData) {
   let totals = Math.round((score / maxScore) * 100);
 
   return totals;
-
-/*   0 interruption = 5
-  0 soliloquy = 5
-  ideal percent is: users/100(20)
-  distance from ideal = 20-0
-  minus difference from score
-  distance - (total interruptions + total soliloquy) = score */
 }
+
+//===============
+// Download personal feedback results
+//===============
+function downloadFeedback() {
+let text = "Your Personal Feedback: You interrupted " + interruptPersonal.textContent + " times. You had " + soliloquyPersonal.textContent + " soliloquys. You spoke for " + minutesPersonal.textContent + " minutes and your contribution percent is: " + percentPersonal.textContent + " Your personal feedback score is: " + scorePersonal.textContent;
+let filename = "personalfeedback.txt";
+download(filename, text); 
+}
+
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+
 
 
 

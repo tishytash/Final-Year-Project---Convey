@@ -368,6 +368,40 @@
     padding-bottom: 0.5em;
 }
 
+/*Download button*/
+.download-button {
+    display:flex;
+    cursor:pointer;
+    font-size: 0.7em;
+    border:1px solid #00ac47;
+    border-radius: 100px;
+    background-color: #00ac47;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
+    margin-top: 2em !important;
+}
+
+.download-button:hover {
+    cursor:pointer;
+    font-size: 0.7em;
+    border:1px solid #00832d !important;
+    border-radius: 100px;
+    background-color: #00832d !important;
+    color: white;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block; 
+    margin: 0 auto;
+    margin-top: 2em !important;
+}
+
 
 
 /*Hides end of call button when clicked, just shows return button*/
