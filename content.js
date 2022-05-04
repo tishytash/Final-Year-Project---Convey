@@ -421,7 +421,7 @@ function calculateScore(personalData) {
 //===============
 function downloadFeedback() {
 let text = "Your Personal Feedback: You interrupted " + interruptPersonal.textContent + " times. You had " + soliloquyPersonal.textContent + " soliloquys. You spoke for " + minutesPersonal.textContent + " minutes and your contribution percent is: " + percentPersonal.textContent + " Your personal feedback score is: " + scorePersonal.textContent;
-let filename = "personalfeedback.txt";
+let filename = "Personal-Feedback-" + getFormattedTime() + ".txt";
 download(filename, text); 
 }
 
@@ -439,6 +439,13 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+function getFormattedTime() {
+  let today = new Date();
+  let y = today.getFullYear();
+  let m = today.getMonth() + 1;
+  let d = today.getDate();
+  return d + "-" + m + "-" + y;
+}
 
 
 
