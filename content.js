@@ -180,13 +180,6 @@ function createContainer() {
       </div>
     </div>
 
-
-    <!--<div class="reactions-div">
-      <div class="show-reactions">Show Reactions</div>
-      <div class="hide-reactions">Hide Reactions</div>
-      <div class="reactions">${createReactions()}</div>
-    </div> -->
-
     </div>
 
     </div>
@@ -219,8 +212,8 @@ function createContainer() {
   onclick('.hide-personal', ()=>{ dom_container.classList.remove("show_personal"); });
   onclick('.download-button',()=>{  downloadFeedback() }, false);
 
-  onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
-  onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); });
+/*   onclick('.show-reactions',()=>{ dom_container.classList.add('show_reactions'); });
+  onclick('.hide-reactions',()=>{ dom_container.classList.remove('show_reactions'); }); */
 
   
   
@@ -259,7 +252,7 @@ function createSoliNotification() {
 // Timer    ----NOT IN USE----
 //==========
 
-var el = document.getElementById('topic-start');
+/* var el = document.getElementById('topic-start');
 if(el){
   el.addEventListener("click", function(){
   var timeleft = 15;
@@ -277,7 +270,7 @@ if(el){
 
   console.log(countdown);
 });
-}
+} */
 
 
 // Create the group rendering table
@@ -349,10 +342,10 @@ function createParticipantRowGroups() {
       <div class="convay-group-selector convay-group-selector-d" data-group="d">D</div>
     </div>
     `;
-}
+} 
 
 // Create the reaction selectors ----NOT IN USE----
-function createReactions() {
+/* function createReactions() {
   return `
   <div class="reactions-list-container" title="Click reaction to react">
     <div class="reactions-list reactions-list-happy" data-group="happy">😄</div>
@@ -362,7 +355,7 @@ function createReactions() {
     <div class="reactions-list reactions-list-agree" data-group="agree">👍</div>
   </div>
   `;
-}
+} */
 
 
 //==========
