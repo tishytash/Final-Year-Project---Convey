@@ -402,7 +402,7 @@ function calculateScore(personalData) {
   let totalParticipants = participants_list.childElementCount;
   let idealTalkPercent = 100 / totalParticipants;
   let idealPercentDifference = Math.abs(idealTalkPercent - parseInt(personalData.pct_display.textContent));
-  score = idealTalkPercent - idealPercentDifference - ((personalData.interruptions + personalData.soliloquys)*25);
+  score = idealTalkPercent - idealPercentDifference - ((personalData.interruptions + personalData.soliloquys)*5);
   let maxScore = idealTalkPercent;
   let totals = Math.round((score / maxScore) * 100);
 
@@ -439,8 +439,6 @@ function getFormattedTime() {
   let d = today.getDate();
   return d + "-" + m + "-" + y;
 }
-
-
 
 
 // ==================================================================
@@ -482,13 +480,6 @@ function getParticipantName(record) {
     }
   }
 }
-
-// Recognise two users are talking at once (intially code creaton)
-/* if talking true
-  another talking true
-  mark inturrupt */
-
-
 
 // ==================================================================
 // DOM UPDATES
@@ -681,10 +672,7 @@ function pulse() {
             }
           }
         }
-        
         record.update_required = true;
-        
-
           
         // If it's been more than 1s since they have talked, they are done
         if (now - record.last >= 1000) {
@@ -710,7 +698,6 @@ function pulse() {
             //console.log("hey you've been speaking for more than 10 seconds.")
           }
         }
-        
 
         // If the person has been talking but not yet for at least one pulse_timeslice, don't do anything yet
         if (duration < config.pulse_timeslice) {
