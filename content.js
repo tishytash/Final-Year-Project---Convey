@@ -828,7 +828,8 @@ function welcome() {
   d.innerHTML = `
     <div class="title">Welcome to Convay!</div>
     <div>To enable the display, turn on the Participants list while in a Meeting.</div>
-    <div>Don't forget to say something when you join the meeting to be added to the feedback.
+    <div>Don't forget to say something when you join the meeting to be added to the feedback. 
+        <p>Try not to talk over one another during greetings to avoid interruptions.</p>
         <p>Prior to ending the call, click the Call Ending? Button to view your personalised feedback.</p>
       <button id="welcome-okay">Okay</button>
     </div>
